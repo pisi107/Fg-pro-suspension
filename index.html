@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SOSPENSIONI KTM</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:#0b0d10;
+    color:#f5f5f5;
+    min-height:100vh;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:#111419;
+    border-bottom:1px solid #292d33;
+    padding:16px;
+}
+
+.header-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.logo{
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:.5px;
+}
+
+.logo span{
+    color:#ff5a00;
+}
+
+.subtitle{
+    color:#8e969f;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.admin-btn{
+    border:1px solid #363b42;
+    background:#191d22;
+    color:#fff;
+    border-radius:10px;
+    padding:9px 12px;
+    font-size:12px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:18px 14px 50px;
+}
+
+.search-box{
+    margin-bottom:18px;
+}
+
+.search-box input{
+    width:100%;
+    padding:15px 16px;
+    background:#15191e;
+    border:1px solid #30353c;
+    border-radius:13px;
+    color:#fff;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#ff5a00;
+}
+
+.section-title{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#858d96;
+    margin:22px 0 10px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+}
+
+.card{
+    background:#15191e;
+    border:1px solid #292e35;
+    border-radius:14px;
+    padding:16px;
+    transition:.15s;
+}
+
+.card:hover{
+    border-color:#ff5a00;
+    transform:translateY(-1px);
+}
+
+.card h3{
+    font-size:16px;
+    margin-bottom:6px;
+}
+
+.card p{
+    color:#8d959e;
+    font-size:12px;
+}
+
+.card .badge{
+    display:inline-block;
+    margin-top:12px;
+    background:#252a31;
+    color:#cbd0d5;
+    border-radius:7px;
+    padding:5px 8px;
+    font-size:10px;
+}
+
+.orange{
+    color:#ff5a00;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.back{
+    margin-bottom:14px;
+}
+
+.back button{
+    background:#181c21;
+    border:1px solid #30353c;
+    color:#fff;
+    border-radius:9px;
+    padding:9px 12px;
+}
+
+.page-title{
+    font-size:27px;
+    font-weight:900;
+    margin-bottom:4px;
+}
+
+.page-subtitle{
+    color:#8d959e;
+    font-size:13px;
+    margin-bottom:20px;
+}
+
+.tabs{
+    display:flex;
+    gap:7px;
+    overflow:auto;
+    padding-bottom:3px;
+    margin-bottom:15px;
+}
+
+.tab{
+    flex-shrink:0;
+    border:1px solid #30353c;
+    background:#15191e;
+    color:#aab1b8;
+    border-radius:9px;
+    padding:9px 13px;
+}
+
+.tab.active{
+    background:#ff5a00;
+    border-color:#ff5a00;
+    color:#fff;
+}
+
+.panel{
+    background:#15191e;
+    border:1px solid #292e35;
+    border-radius:14px;
+    margin-bottom:13px;
+    overflow:hidden;
+}
+
+.panel-title{
+    padding:13px 15px;
+    border-bottom:
