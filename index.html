@@ -113,3 +113,20 @@ function showCity(data){const specs=document.querySelector('#client-profile .spe
 new MutationObserver(installCity).observe(document.body,{childList:true,subtree:true});installCity();
 onAuthStateChanged(cityAuth,u=>{if(!u)return;onSnapshot(doc(cityDb,'profiles',u.uid),s=>{const data=s.data()||{};new MutationObserver(()=>showCity(data)).observe(document.body,{childList:true,subtree:true});showCity(data)})});
 </script>
+
+<script>
+(()=>{
+  function extendYears(){document.querySelectorAll('#bikeYear,#py').forEach(s=>{if(s.dataset.years1970)return;s.dataset.years1970='1';for(let y=1989;y>=1970;y--){const o=document.createElement('option');o.value=o.textContent=y;s.append(o)}})}
+  function customFields(brand,model){
+    const isOther=brand.options[brand.selectedIndex]?.text==='Altro';
+    let box=document.getElementById('other-bike-fields');
+    if(!isOther){if(box)box.remove();return}
+    if(!box){box=document.createElement('div');box.id='other-bike-fields';box.style.cssText='display:contents';box.innerHTML='<input id="otherBrand" placeholder="Specifica marca"><input id="otherModel" placeholder="Specifica modello">';model.after(box)}
+    const b=document.getElementById('otherBrand'),m=document.getElementById('otherModel');
+    const sync=()=>{const opt=brand.options[brand.selectedIndex];if(!opt)return;opt.value=b.value.trim()||'Altro';if(m.value.trim()){model.innerHTML='<option value="'+m.value.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+m.value.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))+'</option>';model.value=m.value.trim()}if(brand.id==='bikeBrand'){const year=document.getElementById('bikeYear'),hidden=document.getElementById('bi');if(hidden)hidden.value=b.value.trim()&&m.value.trim()&&year?.value?b.value.trim()+' '+m.value.trim()+' '+year.value:''}};
+    b.oninput=m.oninput=sync;document.getElementById(brand.id==='bikeBrand'?'bikeYear':'py')?.addEventListener('change',sync);sync()
+  }
+  document.addEventListener('change',e=>{if(e.target.id==='bikeBrand'||e.target.id==='pb')queueMicrotask(()=>{extendYears();customFields(e.target,document.getElementById(e.target.id==='bikeBrand'?'bikeModel':'pm'))})},true);
+  new MutationObserver(()=>extendYears()).observe(document.body,{childList:true,subtree:true});extendYears();
+})();
+</script>
