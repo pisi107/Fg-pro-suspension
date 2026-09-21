@@ -97,3 +97,19 @@ document.addEventListener('click',async e=>{
   await setDoc(ref,{bikes:live,bikeHistory:hist,bike:summary(live,hist)},{merge:true});
 },true);
 </script>
+
+<script type="module">
+import{getApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import{getFirestore,doc,setDoc,serverTimestamp,onSnapshot}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const cityAuth=getAuth(getApp()),cityDb=getFirestore(getApp());
+function installCity(){
+  const address=document.getElementById('ad');
+  if(address&&!document.getElementById('ct')){const city=document.createElement('input');city.id='ct';city.placeholder='Città';address.after(city)}
+  const create=document.getElementById('cr');
+  if(create&&!create.dataset.cityReady){create.dataset.cityReady='1';create.onclick=async()=>{const v=x=>document.getElementById(x).value.trim(),p=document.getElementById('pa').value,nt=document.getElementById('nt');const o={name:v('n'),surname:v('s'),address:v('ad'),city:v('ct'),nationality:document.getElementById('na').value,ranking:document.getElementById('ra').value,bike:v('bi'),weight:v('we'),height:v('he'),email:v('em')};if(Object.values(o).some(x=>!x))return nt.textContent='Completa tutti i campi.';if(!/^(?=.{6,})(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/.test(p))return nt.textContent='Password: minimo 6 caratteri, maiuscola, numero e carattere speciale.';try{const u=await createUserWithEmailAndPassword(cityAuth,o.email,p);await setDoc(doc(cityDb,'profiles',u.user.uid),{...o,createdAt:serverTimestamp()})}catch(e){nt.textContent='Errore: '+e.message}}}
+}
+function showCity(data){const specs=document.querySelector('#client-profile .specs');if(!specs||document.getElementById('city-profile'))return;const city=document.createElement('div');city.id='city-profile';city.className='record';city.style.cursor='default';city.innerHTML='<small>Città</small><h3>'+String(data.city||'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))+'</h3>';specs.append(city)}
+new MutationObserver(installCity).observe(document.body,{childList:true,subtree:true});installCity();
+onAuthStateChanged(cityAuth,u=>{if(!u)return;onSnapshot(doc(cityDb,'profiles',u.uid),s=>{const data=s.data()||{};new MutationObserver(()=>showCity(data)).observe(document.body,{childList:true,subtree:true});showCity(data)})});
+</script>
