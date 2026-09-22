@@ -228,3 +228,14 @@ onSnapshot(collection(ffDb,'availability'),s=>{ffAvail={};s.forEach(d=>{if(d.dat
 onAuthStateChanged(ffAuth,async u=>{if(!u)return;const cfg=(await getDoc(doc(ffDb,'settings','booking'))).data()||{};if(String(cfg.fedeEmail||'').toLowerCase()===String(u.email||'').toLowerCase()){ffUser=u;ffRender()}})
 }
 </script>
+
+<script type="module" id="fg-fede-guard">
+import{getApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getFirestore,collection,doc,setDoc,updateDoc,onSnapshot,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+if(new URLSearchParams(location.search).get('area')==='fede'){
+const gdb=getFirestore(getApp()),gapp=document.querySelector('.app');let saved='',available={};
+function bind(){gapp.querySelectorAll('[data-ff-day]').forEach(b=>b.onclick=()=>{const d=b.dataset.ffDay;setDoc(doc(gdb,'availability',d),{date:d,available:!available[d],updatedAt:serverTimestamp()},{merge:true})});gapp.querySelectorAll('[data-ff-ok]').forEach(b=>b.onclick=()=>updateDoc(doc(gdb,'bookingRequests',b.dataset.ffOk),{status:'confirmed',reviewedAt:serverTimestamp()}));gapp.querySelectorAll('[data-ff-no]').forEach(b=>b.onclick=()=>updateDoc(doc(gdb,'bookingRequests',b.dataset.ffNo),{status:'rejected',reviewedAt:serverTimestamp()}))}
+onSnapshot(collection(gdb,'availability'),s=>{available={};s.forEach(x=>{if(x.data().available)available[x.id]=true});gapp.querySelectorAll('[data-ff-day]').forEach(b=>{const yes=!!available[b.dataset.ffDay];b.textContent=yes?'DISPONIBILE':'NON DISPONIBILE';b.classList.toggle('off',!yes)})});
+setInterval(()=>{const live=gapp.querySelector('#fg-fede-calendar-marker');if(live){saved=gapp.innerHTML;bind()}else if(saved){gapp.innerHTML=saved;bind()}},150)
+}
+</script>
